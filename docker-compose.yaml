@@ -1,0 +1,39 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: tcc
+      MONGO_INITDB_ROOT_PASSWORD: tcc
+
+    volumes:
+      - ./mongo:/data/db
+
+    networks:
+      - tcc-mongo
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: tcc
+      ME_CONFIG_MONGODB_ADMINPASSWORD: tcc
+      ME_CONFIG_MONGODB_URL: mongodb://tcc:tcc@mongo:27017/
+
+    networks:
+      - tcc-mongo
+
+networks:
+  tcc-mongo:
+    driver: bridge
+
+volumes:
+  mongo:
